@@ -73,7 +73,7 @@ function restore() {
   docker exec -i $DB_CONTAINER psql -U odoo -c "CREATE DATABASE $DB_RESTORE OWNER odoo;"
 
   echo "📂 Merestore database..."
-  docker exec -i $DB_CONTAINER psql -U odoo $DB_RESTORE < "$DB_FILE"
+  docker exec -i $DB_CONTAINER psql -U odoo $DB_RESTORE < "$DB_FILE" > /dev/null 2>&1
 
   echo "📂 Merestore filestore..."
   if [ -z "$NOTE" ]; then
@@ -110,7 +110,7 @@ function apply_restore() {
   docker exec -i $DB_CONTAINER psql -U odoo -d postgres -c "CREATE DATABASE $DB_NAME OWNER odoo;"
 
   echo "📋 Menyalin isi dari '$DB_RESTORE' ke '$DB_NAME'..."
-  docker exec -i $DB_CONTAINER pg_dump -U odoo $DB_RESTORE | docker exec -i $DB_CONTAINER psql -U odoo $DB_NAME
+  docker exec -i $DB_CONTAINER pg_dump -U odoo $DB_RESTORE | docker exec -i $DB_CONTAINER psql -U odoo $DB_NAME > /dev/null 2>&1
 
   echo "Menghapus database '$DB_RESTORE'..."
   docker exec -t $DB_CONTAINER psql -U odoo -c "DROP DATABASE $DB_RESTORE;"
